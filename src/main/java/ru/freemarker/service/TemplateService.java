@@ -6,6 +6,7 @@ import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.freemarker.model.Product;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -38,7 +39,7 @@ public class TemplateService {
         temp.process(root, out);
     }
 
-    public void freeMarkerExampleMtemplate() throws IOException, TemplateException {
+    public void freeMarkerExampleMtemplate() {
         // модель данных
         Map<String, Object> root = new HashMap<>();
         // для ${name}
@@ -49,12 +50,6 @@ public class TemplateService {
         persons.add(Arrays.asList("Alexander", "Petrov", 47));
         persons.add(Arrays.asList("Slava", "Petrov", 13));
         root.put("persons", persons);
-
-//        // для квадратных скобок
-//        List<List> persons2 = new ArrayList<>();
-//        persons.add(Arrays.asList("Alexander2", "Petrov2", 47));
-//        persons.add(Arrays.asList("Alexander3", "Petrov3", 47));
-//        root.put("configFpName.second",persons2);
 
         try {
             Template template = cfg.getTemplate("mtemplate.ftl");
@@ -67,6 +62,33 @@ public class TemplateService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void freeMarkerExampleDevs() throws IOException, TemplateException {
+        //Устанавливаем синтаксис квадратных скобок (работают или []  или <>  вместе нет)
+        cfg.setInterpolationSyntax(Configuration.SQUARE_BRACKET_INTERPOLATION_SYNTAX);
+        cfg.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
+
+        /* Create a data-model */
+        Map root = new HashMap();
+
+        root.put("user", "Big Joe");
+        Product latest = new Product();
+        latest.setUrl("products/greenmouse.html");
+        latest.setName("green mouse");
+        latest.setServiceName("serviceName");
+        root.put("latestProduct", latest);
+
+        root.put("serviceName2","asdasd");
+
+        /* Get the template (uses cache internally) */
+        Template temp = cfg.getTemplate("devs.ftl");
+
+        /* Merge data-model with template */
+        Writer out = new OutputStreamWriter(System.out);
+        temp.process(root, out);
+        // Note: Depending on what `out` is, you may need to call `out.close()`.
+        // This is usually the case for file output, but not for servlet output.
     }
 
 }

@@ -35,5 +35,8 @@ public class Main implements CommandLineRunner {
         System.out.println();
         System.out.println("-------------freeMarkerExampleMtemplate-------------");
         templateService.freeMarkerExampleMtemplate();
+
+        System.out.println("-------------freeMarkerExampleDevs-------------");
+        templateService.freeMarkerExampleDevs();
     }
 }
